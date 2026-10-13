@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Plan alimentaire</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNjQgNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJsZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzBhODRmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzMwZDVjOCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE2IiBmaWxsPSJ1cmwoI2xnKSIvPjxlbGxpcHNlIGN4PSIzMiIgY3k9IjUwIiByeD0iMjUiIHJ5PSI3IiBmaWxsPSIjZmZmIi8+PGVsbGlwc2UgY3g9IjMyIiBjeT0iNDkiIHJ4PSIxOCIgcnk9IjQuNSIgZmlsbD0iI2RiZTlmZiIvPjxjaXJjbGUgY3g9IjI5IiBjeT0iMzgiIHI9IjExIiBmaWxsPSIjZmYzNzVmIi8+PHBhdGggZD0iTTIyIDM0cTEtNCA1LTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjYiLz48cGF0aCBkPSJNMjkgMjhxMC01IDItNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjN2E0YTJiIiBzdHJva2Utd2lkdGg9IjEuOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTMxIDI0YzEtNCA1LTUgOC00LTEgNC00IDUtOCA0eiIgZmlsbD0iIzM0Yzc1OSIvPjxwYXRoIGQ9Ik00MiA0OHExLTkgOS0xMS0xIDktOSAxMXoiIGZpbGw9IiNmZmYxYjgiIHN0cm9rZT0iI2ZmMzc1ZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTQ5IDExbDMgMy0xNSAxOC0zLTJ6IiBmaWxsPSIjZjJmMmY3Ii8+PHBhdGggZD0iTTQ5IDExbDYtNiIgc3Ryb2tlPSIjMWQxZDFmIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTkgMjJ2OE0xMyAyMnY4TTE3IDIydjgiLz48cGF0aCBkPSJNOSAzMHE0IDUgOCAwIi8+PHBhdGggZD0iTTEzIDM0djE4IiBzdHJva2Utd2lkdGg9IjIuOCIvPjwvZz48L3N2Zz4=">
 <meta property="og:title" content="Ton assiette, enfin faite pour toi.">
 <meta property="og:description" content="Calcule tes besoins, compose tes repas, atteins ton objectif.">
@@ -83,26 +85,27 @@ input:focus,select:focus,button:focus-visible,a:focus-visible{outline:2px solid 
 .fh{font-size:12px;color:var(--mute);font-weight:600}.fr b{font-size:14px}
 .fr .x{border:0;background:none;color:var(--mute);cursor:pointer;font-size:16px}
 .sc{overflow-x:auto}.fr input.mP,.fh .hP{color:var(--P)}.fr input.mC,.fh .hC{color:var(--C)}.fr input.mL,.fh .hL{color:var(--L)}.fr input.mP,.fr input.mC,.fr input.mL{font-weight:600;box-shadow:inset 0 -2px 0 currentColor}.fr b{text-align:right}.sc .fr{min-width:700px}
+#stat{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:7px 16px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
 </style>
 </head>
 <body>
-<header class="brand"><svg viewBox="0 0 64 64" role="img" aria-label="Logo : une pomme coupée au couteau dans une assiette, avec une fourchette"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a84ff"/><stop offset="1" stop-color="#30d5c8"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#lg)"/><ellipse cx="32" cy="50" rx="25" ry="7" fill="#fff"/><ellipse cx="32" cy="49" rx="18" ry="4.5" fill="#dbe9ff"/><circle cx="29" cy="38" r="11" fill="#ff375f"/><path d="M22 34q1-4 5-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".6"/><path d="M29 28q0-5 2-7" fill="none" stroke="#7a4a2b" stroke-width="1.8" stroke-linecap="round"/><path d="M31 24c1-4 5-5 8-4-1 4-4 5-8 4z" fill="#34c759"/><path d="M42 48q1-9 9-11-1 9-9 11z" fill="#fff1b8" stroke="#ff375f" stroke-width="2" stroke-linejoin="round"/><path d="M49 11l3 3-15 18-3-2z" fill="#f2f2f7"/><path d="M49 11l6-6" stroke="#1d1d1f" stroke-width="3.5" stroke-linecap="round"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M9 22v8M13 22v8M17 22v8"/><path d="M9 30q4 5 8 0"/><path d="M13 34v18" stroke-width="2.8"/></g></svg><p>Ton assiette, enfin faite pour toi.</p><span>Calcule tes besoins, compose tes repas, atteins ton objectif.</span><div class="chips" id="chips"></div></header>
+<header class="brand"><svg viewBox="0 0 64 64" role="img" aria-label="Logo : une pomme coupée au couteau dans une assiette, avec une fourchette"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a84ff"/><stop offset="1" stop-color="#30d5c8"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#lg)"/><ellipse cx="32" cy="50" rx="25" ry="7" fill="#fff"/><ellipse cx="32" cy="49" rx="18" ry="4.5" fill="#dbe9ff"/><circle cx="29" cy="38" r="11" fill="#ff375f"/><path d="M22 34q1-4 5-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".6"/><path d="M29 28q0-5 2-7" fill="none" stroke="#7a4a2b" stroke-width="1.8" stroke-linecap="round"/><path d="M31 24c1-4 5-5 8-4-1 4-4 5-8 4z" fill="#34c759"/><path d="M42 48q1-9 9-11-1 9-9 11z" fill="#fff1b8" stroke="#ff375f" stroke-width="2" stroke-linejoin="round"/><path d="M49 11l3 3-15 18-3-2z" fill="#f2f2f7"/><path d="M49 11l6-6" stroke="#1d1d1f" stroke-width="3.5" stroke-linecap="round"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M9 22v8M13 22v8M17 22v8"/><path d="M9 30q4 5 8 0"/><path d="M13 34v18" stroke-width="2.8"/></g></svg><p>Ton assiette, enfin faite pour toi.</p><span>Calcule tes besoins, compose tes repas, atteins ton objectif.</span></header>
 <nav><div><a href="#profil" data-pg="profil">Profil</a><a href="#repas" data-pg="repas">Repas</a><a href="#suivi" data-pg="suivi">Suivi</a><a href="#aliments" data-pg="aliments">Aliments</a></div></nav>
 <main id="app"></main>
-<input type="file" id="imp" accept=".json,application/json" hidden>
+<div id="stat" role="status"></div>
+
 <script>
 const KEY="plan-alim-v2",CATS=["Protéines","Féculents","Laitiers","Petit-déj","Autres"];
 const DEF={p:{sex:"f",age:30,w:65,h:165,act:1.375,tw:60,wk:12,prot:1.6,def:10},seed:0,planKcal:0,
 foods:[],meals:[]};
 let openFood=null;const clone=o=>JSON.parse(JSON.stringify(o));
-let R=null;try{R=JSON.parse(localStorage.getItem("plan-alim-v3"))}catch(e){}
-if(!R||!Array.isArray(R.list)||!R.list.length){let old=null;try{old=JSON.parse(localStorage.getItem(KEY))}catch(e){}
- R={cur:"p1",list:[{id:"p1",name:"Moi",S:(old&&old.p)?old:clone(DEF)}]}}
-let S;const cur=()=>R.list.find(z=>z.id===R.cur);
-const setCur=id=>{openFood=null;const x=R.list.find(z=>z.id===id)||R.list[0];R.cur=x.id;S=x.S;if(S.p.def==null)S.p.def=10;
- if(!S.mig2){const DN=["Œuf","Fromage blanc 0%","Tranche de pain","Wrap complet","Viande","Poisson","Fromage","Pâtes complètes","Riz complet","Miel"];S.foods=(S.foods||[]).filter(f=>!DN.includes(f.n));S.meals=(S.meals||[]).map(m=>({n:m.n,i:m.i.filter(it=>!DN.includes(it[0]))})).filter(m=>m.i.length);if(!S.meals.length)S.planKcal=0;S.mig2=true}};
-setCur(R.cur);
-const save=()=>{try{localStorage.setItem("plan-alim-v3",JSON.stringify(R))}catch(e){}};
+let S=null,SB=null,USER=null,AUTH="loading",authMode="login",authMsg="",AD={},asex="f",psex="f",uMsg="",busy=false;
+const ACTS=[[1.2,"Sédentaire"],[1.375,"Légère · 1 à 3 séances"],[1.55,"Modérée · 3 à 5 séances"],[1.725,"Intense · 6 à 7 séances"]];
+const ageOf=b=>Math.floor((Date.now()-new Date(b+"T12:00:00"))/31557600000);
+const setStat=t=>{const e=document.getElementById("stat");if(!e)return;e.textContent=t;e.style.opacity=1;clearTimeout(setStat.t);setStat.t=setTimeout(()=>{e.style.opacity=0},2200)};
+async function saveNow(){if(!SB||!USER||!S)return;setStat("Enregistrement…");const{error}=await SB.from("app_data").upsert({user_id:USER.id,state:S,updated_at:new Date().toISOString()});setStat(error?"⚠️ Non enregistré":"Enregistré ✓")}
+let saveT=null;const save=()=>{if(!SB||!USER||!S)return;clearTimeout(saveT);saveT=setTimeout(saveNow,600)};
+function syncP(){const u=S.u||{};if(u.sex)S.p.sex=u.sex;if(u.h)S.p.h=+u.h;if(u.act)S.p.act=+u.act;if(u.birth)S.p.age=ageOf(u.birth)}
 const r=(x,d=0)=>(+x).toLocaleString("fr-FR",{maximumFractionDigits:d,minimumFractionDigits:d});
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
 const find=n=>S.foods.find(f=>f.n===n),kc=f=>f.P*4+f.C*4+f.L*9;
@@ -138,21 +141,23 @@ function auto(){
 
 function seg(k,opts,val){return`<div class="seg">${opts.map(([v,l])=>`<button data-seg="${k}" data-v="${v}" class="${v==val?"on":""}">${l}</button>`).join("")}</div>`}
 function pageProfil(){
- const p=S.p,t=target();
- const num=(k,l,u,st)=>`<div class="item"><label for="p_${k}">${l}</label><span style="display:flex;gap:4px;align-items:center"><input id="p_${k}" type="number" inputmode="decimal" step="${st||1}" data-p="${k}" value="${p[k]}" style="width:80px"><span style="color:var(--mute)">${u}</span></span></div>`;
- return`<h1>Mon profil</h1><p class="lead">Quelques informations pour calculer ce dont ton corps a besoin chaque jour.</p>
+ const p=S.p,t=target(),u=S.u||{};psex=u.sex||p.sex;
+ const num=(k,l,un,st)=>`<div class="item"><label for="p_${k}">${l}</label><span style="display:flex;gap:4px;align-items:center"><input id="p_${k}" type="number" inputmode="decimal" step="${st||1}" data-p="${k}" value="${p[k]}" style="width:80px"><span style="color:var(--mute)">${un}</span></span></div>`;
+ const tx=(id,l,v,ty)=>`<div class="item"><label for="${id}">${l}</label><input id="${id}" type="${ty||"text"}" value="${esc(v||"")}" style="max-width:230px"></div>`;
+ return`<h1>${u.prenom?"Bonjour "+esc(u.prenom)+" 👋":"Mon profil"}</h1><p class="lead">Tes informations et tes objectifs pour calculer ce dont ton corps a besoin chaque jour.</p>
  <div class="card hero"><div class="n">${r(t.kcal)}</div><div class="u">kcal par jour</div>
  <div class="macros"><div><b style="color:var(--P)">${r(t.P)} g</b>Protéines</div><div><b style="color:var(--C)">${r(t.C)} g</b>Glucides</div><div><b style="color:var(--L)">${r(t.L)} g</b>Lipides</div></div></div>
  <p class="note">Métabolisme de base ≈ ${r(t.bmr)} kcal, dépense totale ≈ ${r(t.tdee)} kcal/jour.${t.weeks?" Il faut environ "+r(t.weeks)+" semaines pour atteindre ton poids visé.":""} ${t.msg.map(m=>`<span class="w">${m}</span>`).join(" ")}</p>
- <h3>Moi</h3><div class="card"><div class="item"><span>Sexe</span>${seg("sex",[["f","Femme"],["m","Homme"]],p.sex)}</div>${num("age","Âge","ans")}${num("h","Taille","cm")}${num("w","Poids actuel","kg",.1)}
- <div class="item"><label for="p_act">Activité physique</label><select id="p_act" data-p="act">${[[1.2,"Sédentaire"],[1.375,"Légère · 1 à 3 séances"],[1.55,"Modérée · 3 à 5 séances"],[1.725,"Intense · 6 à 7 séances"]].map(a=>`<option value="${a[0]}"${+p.act===a[0]?" selected":""}>${a[1]}</option>`).join("")}</select></div></div>
- <h3>Mon objectif</h3><div class="card">${num("tw","Poids visé","kg",.1)}${num("wk","Délai","semaines")}${num("prot","Protéines","g / kg",.1)}<div class="item" style="flex-direction:column;align-items:stretch;gap:12px"><div style="display:flex;justify-content:space-between"><label for="p_def">Déficit maximum</label><b id="defv">${p.def} %</b></div><div class="ios" id="p_def" role="slider" tabindex="0" aria-label="Déficit maximum" aria-valuemin="10" aria-valuemax="20" aria-valuenow="${p.def}" style="--pct:${(p.def-10)*10}%"></div></div></div>
- <p class="note">Les protéines entretiennent les muscles, les glucides donnent l'énergie, les lipides aident les hormones et les vitamines. Ici : lipides à 28 % des calories, glucides pour le reste. Ces calculs sont des estimations : en cas de pathologie ou de doute, demande l'avis d'un médecin ou d'un diététicien.</p>
- <h3>Profils et données</h3><div class="card"><div class="item"><label for="p_name">Nom du profil</label><input id="p_name" data-pname value="${esc(cur().name)}"></div>
- <div class="item"><span>Exporter tous mes profils</span><button class="btn t" data-act="export">Exporter</button></div>
- <div class="item"><span>Importer un fichier</span><button class="btn t" data-act="import">Choisir…</button></div>
- <div class="item"><span>Supprimer ce profil</span><button class="btn t" style="color:#ff3b30" data-act="delProfile"${R.list.length<2?" disabled":""}>Supprimer</button></div></div>
- <p class="note">Les profils sont enregistrés sur cet appareil. Pour les retrouver ailleurs, exporte un fichier puis importe-le sur l'autre appareil.</p>
+ <h3>Informations personnelles</h3><div class="card">${tx("u_prenom","Prénom",u.prenom)}${tx("u_nom","Nom",u.nom)}
+ <div class="item"><span>Sexe</span><div class="seg"><button data-usex="f" class="${psex==="f"?"on":""}">Femme</button><button data-usex="m" class="${psex==="m"?"on":""}">Homme</button></div></div>
+ ${tx("u_birth","Date de naissance",u.birth,"date")}
+ <div class="item"><label for="u_h">Taille</label><span style="display:flex;gap:4px;align-items:center"><input id="u_h" type="number" inputmode="decimal" value="${u.h||p.h}" style="width:80px"><span style="color:var(--mute)">cm</span></span></div>
+ <div class="item"><label for="u_act">Activité physique</label><select id="u_act">${ACTS.map(a=>`<option value="${a[0]}"${+p.act===a[0]?" selected":""}>${a[1]}</option>`).join("")}</select></div></div>
+ <div class="row" style="align-items:center"><button class="btn" data-act="saveU">Enregistrer</button><span class="note" style="margin:0">${uMsg}${u.birth&&!uMsg?"Âge : "+ageOf(u.birth)+" ans":""}</span></div>
+ <h3>Mes objectifs</h3>${S.goalSet?"":`<div class="banner" style="margin:0 0 12px">Renseigne ton poids actuel, ton poids visé et ton délai pour obtenir ton objectif personnalisé.</div>`}<div class="card">${num("w","Poids actuel","kg",.1)}${num("tw","Poids visé","kg",.1)}${num("wk","Délai","semaines")}${num("prot","Protéines","g / kg",.1)}
+ <div class="item" style="flex-direction:column;align-items:stretch;gap:12px"><div style="display:flex;justify-content:space-between"><label for="p_def">Déficit maximum</label><b id="defv">${p.def} %</b></div><div class="ios" id="p_def" role="slider" tabindex="0" aria-label="Déficit maximum" aria-valuemin="10" aria-valuemax="20" aria-valuenow="${p.def}" style="--pct:${(p.def-10)*10}%"></div></div></div>
+ <p class="note">Les objectifs s'enregistrent automatiquement. Les protéines entretiennent les muscles, les glucides donnent l'énergie, les lipides aident les hormones et les vitamines. Ici : lipides à 28 % des calories, glucides pour le reste. Ces calculs sont des estimations : en cas de pathologie ou de doute, demande l'avis d'un médecin ou d'un diététicien.</p>
+ <h3>Mon compte</h3><div class="card"><div class="item"><span>E-mail</span><span style="color:var(--mute)">${esc(USER?USER.email:"")}</span></div><div class="item"><span>Se déconnecter</span><button class="btn t" data-act="signout">Déconnexion</button></div><div class="item"><span>Supprimer mon compte et mes données</span><button class="btn t" style="color:#ff3b30" data-act="delacc">Supprimer</button></div></div>
  <div class="row"><a class="btn" href="#repas" style="text-decoration:none">Voir mes repas</a></div>`;
 }
 function pageRepas(){
@@ -179,7 +184,6 @@ function pageAliments(){
  <div class="card" style="padding:14px 16px"><input id="cq" type="search" placeholder="Rechercher (ex. saumon, riz, pomme)" value="${esc(ciq)}" autocomplete="off" style="box-sizing:border-box;width:100%;background:var(--fill);border:0;border-radius:10px;padding:10px 12px;font:inherit;color:var(--ink)">${chips}<div id="cr" style="margin:10px -16px 0">${ciRes(ciq)}</div></div>
  <p class="note">Valeurs pour 100 g. Source : table de composition nutritionnelle Ciqual 2025, Anses. Pour utiliser un aliment, ajoute-le depuis l'onglet Repas.</p>`;
 }
-function renderChips(){const c=document.getElementById("chips");if(c)c.innerHTML=R.list.map(x=>`<button class="chip${x.id===R.cur?" on":""}" data-pf="${x.id}">${esc(x.name)}</button>`).join("")+`<button class="chip" data-act="newProfile" aria-label="Nouveau profil">+</button>`}
 let metric="w";
 const MET={w:["Poids","kg"],taille:["Taille","cm"],hanches:["Hanches","cm"],poitrine:["Poitrine","cm"],bras:["Bras","cm"],cuisse:["Cuisse","cm"]};
 const fd=d=>new Date(d+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"});
@@ -210,22 +214,74 @@ function pageSuivi(){
  <div class="row"><button class="btn" data-act="saveLog">Enregistrer</button></div>
  ${L.length?`<h3>Historique</h3><div class="card">${L.map((e,i)=>[e,i]).reverse().map(([e,i])=>`<div class="item"><span><b>${fd(e.d)}</b><br><span style="color:var(--mute);font-size:13px">${[e.w!=null?r(e.w,1)+" kg":"",...Object.entries(e.m||{}).map(([k,v])=>MET[k][0].toLowerCase()+" "+r(v,1))].filter(Boolean).join(" · ")}</span></span><button class="btn t" data-dl="${i}">Supprimer</button></div>`).join("")}</div>`:""}`;
 }
+const fv=id=>{const e=document.getElementById(id);return e?e.value:""};
+const authErrFr=m=>/Invalid login/i.test(m)?"E-mail ou mot de passe incorrect.":/not confirmed/i.test(m)?"Confirme d'abord ton e-mail (lien reçu par e-mail).":/already registered/i.test(m)?"Un compte existe déjà avec cet e-mail.":/Password should/i.test(m)?"Mot de passe trop court (8 caractères minimum).":/rate limit|too many/i.test(m)?"Trop de tentatives, réessaie dans quelques minutes.":"Une erreur est survenue : "+m;
+function chk(o){if(!o.prenom||!o.nom)return"Renseigne ton prénom et ton nom.";if(!o.birth||isNaN(new Date(o.birth)))return"Renseigne ta date de naissance.";const a=ageOf(o.birth);if(a<18)return"Ce calculateur est prévu pour les adultes (18 ans et plus).";if(a>100)return"Date de naissance invalide.";if(!(o.h>=120&&o.h<=220))return"Taille invalide (entre 120 et 220 cm).";return""}
+function authPage(){
+ const ad=AD||{},m=authMsg?`<p class="note" style="color:${/✓|envoy|supprimé/.test(authMsg)?"var(--mute)":"#ff3b30"};margin:12px 4px 0">${esc(authMsg)}</p>`:"";
+ const w=c=>`<div style="max-width:460px;margin:0 auto">${c}</div>`;
+ const tx=(id,l,v,ty,ac)=>`<div class="item"><label for="${id}">${l}</label><input id="${id}" type="${ty||"text"}" value="${esc(v||"")}" autocomplete="${ac||"off"}" style="max-width:230px"></div>`;
+ const link=(am,t)=>`<button class="btn t" data-am="${am}">${t}</button>`;
+ if(AUTH==="loading")return w(`<p class="lead" style="text-align:center">Chargement…</p>`);
+ if(AUTH==="noconfig")return w(`<h1>Connexion indisponible</h1><p class="lead">Le service de comptes n'est pas configuré ou n'a pas pu être chargé. Renseigne l'adresse et la clé de ton projet dans <b>config.js</b>.</p>`);
+ if(AUTH==="recovery")return w(`<h1>Nouveau mot de passe</h1><div class="card">${tx("a_pw","Mot de passe","","password","new-password")}</div>${m}<div class="row"><button class="btn" id="a_go" data-act="recover">Enregistrer</button></div>`);
+ if(authMode==="confirm")return w(`<h1>Vérifie tes e-mails</h1><p class="lead">Un lien de confirmation vient de t'être envoyé. Clique dessus, puis reviens te connecter.</p><div class="row">${link("login","Aller à la connexion")}</div>`);
+ if(authMode==="signup")return w(`<h1>Créer un compte</h1><p class="lead">Quelques informations pour calculer tes besoins.</p><div class="card">${tx("a_prenom","Prénom",ad.prenom,"text","given-name")}${tx("a_nom","Nom",ad.nom,"text","family-name")}<div class="item"><span>Sexe</span><div class="seg"><button data-asex="f" class="${asex==="f"?"on":""}">Femme</button><button data-asex="m" class="${asex==="m"?"on":""}">Homme</button></div></div>${tx("a_birth","Date de naissance",ad.birth,"date","bday")}${tx("a_h","Taille (cm)",ad.h,"number")}<div class="item"><label for="a_act">Activité physique</label><select id="a_act">${ACTS.map(a=>`<option value="${a[0]}"${+(ad.act||1.375)===a[0]?" selected":""}>${a[1]}</option>`).join("")}</select></div></div><h3>Mon compte</h3><div class="card">${tx("a_email","E-mail",ad.email,"email","username")}${tx("a_pw","Mot de passe (8 caractères min.)","","password","new-password")}</div>${m}<p class="note">Tes données sont stockées en ligne et ne sont visibles que par toi. Tu peux supprimer ton compte à tout moment depuis ton profil.</p><div class="row"><button class="btn" id="a_go" data-act="signup">Créer mon compte</button>${link("login","J'ai déjà un compte")}</div>`);
+ if(authMode==="forgot")return w(`<h1>Mot de passe oublié</h1><p class="lead">Entre ton e-mail, nous t'enverrons un lien pour en choisir un nouveau.</p><div class="card">${tx("a_email","E-mail",ad.email,"email","username")}</div>${m}<div class="row"><button class="btn" id="a_go" data-act="forgot">Envoyer le lien</button>${link("login","Retour")}</div>`);
+ return w(`<h1>Connexion</h1><p class="lead">Connecte-toi pour retrouver ton plan alimentaire.</p><div class="card">${tx("a_email","E-mail",ad.email,"email","username")}${tx("a_pw","Mot de passe","","password","current-password")}</div>${m}<div class="row"><button class="btn" id="a_go" data-act="login">Se connecter</button>${link("signup","Créer un compte")}</div><div class="row" style="margin-top:4px">${link("forgot","Mot de passe oublié ?")}</div>`);
+}
+async function loadState(){
+ const{data,error}=await SB.from("app_data").select("state").eq("user_id",USER.id).maybeSingle();
+ if(error)throw error;
+ const base=clone(DEF);
+ if(data&&data.state&&data.state.p){const st=data.state;S=Object.assign(base,st);S.p=Object.assign(clone(DEF).p,st.p);S.u=st.u||{};S.foods=st.foods||[];S.meals=st.meals||[];S.log=st.log||[]}
+ else{const m=USER.user_metadata||{};S=base;S.u={prenom:m.prenom,nom:m.nom,sex:m.sex,h:m.h,birth:m.birth,act:m.act};syncP();await saveNow()}
+ syncP();
+}
+async function enter(u){USER=u;try{await loadState();AUTH="in";authMsg=""}catch(e){AUTH="out";authMode="login";authMsg="Impossible de charger tes données : la base est-elle bien configurée ?"}render(false)}
+async function boot(){
+ const c=window.APP_CONFIG||{};
+ if(!c.url||!c.key||!window.supabase){AUTH="noconfig";render(false);return}
+ SB=window.supabase.createClient(c.url,c.key);
+ SB.auth.onAuthStateChange((ev,session)=>{if(ev==="PASSWORD_RECOVERY"){AUTH="recovery";USER=session?session.user:null;authMsg="";render(false)}else if(ev==="SIGNED_OUT"){USER=null;S=null;AUTH="out";authMode="login";render(false)}});
+ const{data:{session}}=await SB.auth.getSession();
+ if(session&&AUTH!=="recovery")await enter(session.user);else if(!session){AUTH="out";render(false)}
+}
+async function doLogin(){if(busy)return;AD={email:fv("a_email").trim()};const pw=fv("a_pw");if(!AD.email||!pw){authMsg="Renseigne ton e-mail et ton mot de passe.";render(false);return}
+ busy=true;const{data,error}=await SB.auth.signInWithPassword({email:AD.email,password:pw});busy=false;
+ if(error){authMsg=authErrFr(error.message);render(false);return}await enter(data.user)}
+async function doSignup(){if(busy)return;const o={prenom:fv("a_prenom").trim(),nom:fv("a_nom").trim(),sex:asex,birth:fv("a_birth"),h:+fv("a_h"),act:+fv("a_act")},em=fv("a_email").trim(),pw=fv("a_pw");
+ AD=Object.assign({},o,{email:em});const e=chk(o)||(!em?"Renseigne ton e-mail.":pw.length<8?"Mot de passe : 8 caractères minimum.":"");
+ if(e){authMsg=e;render(false);return}
+ busy=true;authMsg="";const{data,error}=await SB.auth.signUp({email:em,password:pw,options:{data:o,emailRedirectTo:location.origin+location.pathname}});busy=false;
+ if(error){authMsg=authErrFr(error.message);render(false);return}
+ if(data.user&&data.user.identities&&!data.user.identities.length){authMsg="Un compte existe déjà avec cet e-mail.";render(false);return}
+ if(data.session){await enter(data.user)}else{authMode="confirm";authMsg="";render(false)}}
+async function doForgot(){if(busy)return;AD={email:fv("a_email").trim()};if(!AD.email){authMsg="Renseigne ton e-mail.";render(false);return}
+ busy=true;await SB.auth.resetPasswordForEmail(AD.email,{redirectTo:location.origin+location.pathname});busy=false;authMsg="Si un compte existe avec cet e-mail, un lien vient d'être envoyé.";render(false)}
+async function doRecover(){const pw=fv("a_pw");if(pw.length<8){authMsg="Mot de passe : 8 caractères minimum.";render(false);return}
+ const{data,error}=await SB.auth.updateUser({password:pw});if(error){authMsg=authErrFr(error.message);render(false);return}
+ history.replaceState(null,"",location.pathname);await enter(data.user||USER)}
+function saveU(){const o={prenom:fv("u_prenom").trim(),nom:fv("u_nom").trim(),sex:psex,birth:fv("u_birth"),h:+fv("u_h"),act:+fv("u_act")},e=chk(o);
+ if(e){uMsg="⚠️ "+e;render(true);return}S.u=o;syncP();uMsg="Informations enregistrées ✓";upd()}
+async function doSignout(){clearTimeout(saveT);await saveNow();await SB.auth.signOut();USER=null;S=null;AUTH="out";authMode="login";authMsg="";AD={};render(false)}
+async function doDelete(){if(!confirm("Supprimer définitivement ton compte et toutes tes données ?"))return;clearTimeout(saveT);const{error}=await SB.rpc("delete_account");if(error){alert("La suppression a échoué : "+error.message);return}await SB.auth.signOut();USER=null;S=null;AUTH="out";authMode="login";authMsg="Ton compte a été supprimé.";AD={};render(false)}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id&&e.target.id.startsWith("a_")){const g=document.getElementById("a_go");if(g)g.click()}});
+
 const PAGES={profil:pageProfil,repas:pageRepas,suivi:pageSuivi,aliments:pageAliments};
 let page="profil";
 function render(keep){
- const sy=scrollY;
+ const sy=scrollY,nav=document.querySelector("nav");
+ if(AUTH!=="in"){nav.style.display="none";document.getElementById("app").innerHTML=authPage();scrollTo(0,0);return}
+ nav.style.display="";
  page=(location.hash||"#profil").slice(1);if(!PAGES[page])page="profil";
  document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.pg===page));
- document.getElementById("app").innerHTML=PAGES[page]()+'<p class="note" style="text-align:center;margin-top:40px">Estimations indicatives, qui ne remplacent pas un avis médical.</p>';renderChips();
+ document.getElementById("app").innerHTML=PAGES[page]()+'<p class="note" style="text-align:center;margin-top:40px">Estimations indicatives, qui ne remplacent pas un avis médical.</p>';
+ if(!keep)uMsg="";
  if(keep)scrollTo(0,sy);else scrollTo(0,0);
 }
 const upd=()=>{save();render(true)};
 addEventListener("hashchange",()=>render(false));
-const uid=()=>"p"+Date.now().toString(36)+Math.floor(Math.random()*1e4);
-document.addEventListener("change",e=>{const t=e.target;
- if(t.dataset&&t.dataset.pname!==undefined){cur().name=(t.value||"").trim().slice(0,30)||"Profil";save();renderChips()}
- if(t.id==="imp"&&t.files&&t.files[0]){const rd=new FileReader();rd.onload=()=>{try{const j=JSON.parse(rd.result);const L=(j.profiles||[]).filter(x=>x&&x.S&&x.S.p&&Array.isArray(x.S.foods)&&Array.isArray(x.S.meals));if(!L.length)throw 0;L.forEach(x=>R.list.push({id:uid(),name:String(x.name||"Importé").slice(0,30),S:x.S}));setCur(R.list[R.list.length-L.length].id);save();render(false);alert(L.length+" profil(s) importé(s).")}catch(_){alert("Ce fichier n'est pas valide.")}t.value=""};rd.readAsText(t.files[0])}
-});
 const nrm=s=>String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 let CI=null,ciq="",ciMsg="";
 let CIQD=(typeof CIQ!=="undefined")?CIQ:null,CIQS=CIQD?"ok":"idle";
@@ -265,13 +321,13 @@ const val=(el,x)=>{const b=el.getBoundingClientRect();return Math.round(10+Math.
 const show=(el,v)=>{el.style.setProperty("--pct",(v-10)*10+"%");el.setAttribute("aria-valuenow",v);const l=document.getElementById("defv");if(l)l.textContent=v+" %"};
 document.addEventListener("pointerdown",e=>{const el=e.target.closest&&e.target.closest(".ios");if(!el)return;drag=el;try{el.setPointerCapture(e.pointerId)}catch(_){}show(el,val(el,e.clientX))});
 document.addEventListener("pointermove",e=>{if(drag)show(drag,val(drag,e.clientX))});
-document.addEventListener("pointerup",e=>{if(!drag)return;const v=val(drag,e.clientX);drag=null;S.p.def=v;upd()});
+document.addEventListener("pointerup",e=>{if(!drag)return;const v=val(drag,e.clientX);drag=null;S.goalSet=true;S.p.def=v;upd()});
 document.addEventListener("pointercancel",()=>{if(drag){drag=null;render(true)}});
 document.addEventListener("keydown",e=>{const el=e.target.closest&&e.target.closest(".ios");if(!el)return;const d=(e.key==="ArrowRight"||e.key==="ArrowUp")?1:(e.key==="ArrowLeft"||e.key==="ArrowDown")?-1:0;if(d){e.preventDefault();S.p.def=Math.min(20,Math.max(10,S.p.def+d));upd()}});
 })();
 document.addEventListener("change",e=>{
  const d=e.target.dataset,v=e.target.value;
- if(d.p){S.p[d.p]=d.p==="sex"?v:d.p==="def"?Math.min(20,Math.max(10,+v||10)):+v;upd()}
+ if(d.p){S.goalSet=true;S.p[d.p]=d.p==="sex"?v:d.p==="def"?Math.min(20,Math.max(10,+v||10)):+v;upd()}
  else if(d.mn!==undefined){S.meals[d.mn].n=v;save()}
  else if(d.mf){const[a,b]=d.mf.split(",");S.meals[a].i[b][0]=v;upd()}
  else if(d.ma){const[a,b]=d.ma.split(",");S.meals[a].i[b][1]=Math.max(0,+v||0);upd()}
@@ -281,11 +337,15 @@ document.addEventListener("change",e=>{
 });
 document.addEventListener("click",e=>{
  const b=e.target.closest("button");if(!b)return;const d=b.dataset;
- if(d.seg){S.p[d.seg]=d.v;upd()}
+ if(d.usex){psex=d.usex;document.querySelectorAll("[data-usex]").forEach(x=>x.classList.toggle("on",x.dataset.usex===psex))}
+ else if(d.asex){asex=d.asex;document.querySelectorAll("[data-asex]").forEach(x=>x.classList.toggle("on",x.dataset.asex===asex))}
+ else if(d.am){authMode=d.am;authMsg="";render(false)}
+ else if(d.act==="login")doLogin();else if(d.act==="signup")doSignup();else if(d.act==="forgot")doForgot();else if(d.act==="recover")doRecover()
+ else if(d.act==="saveU")saveU();else if(d.act==="signout")doSignout();else if(d.act==="delacc")doDelete()
+ else if(d.seg){S.p[d.seg]=d.v;upd()}
  else if(d.of!==undefined){openFood=openFood===+d.of?null:+d.of;render(true)}
  else if(d.ci!==undefined){const x=ci()[+d.ci];if(find(x.n)){alert("Cet aliment est déjà dans ta liste.");return}
   S.foods.push({n:x.n,u:"g",q:100,P:x.P,C:x.C,L:x.L,cat:guess(x),auto:true});ciMsg="« "+x.n+" » ajouté à ta liste. ";upd()}
- else if(d.pf){setCur(d.pf);save();render(true)}
  else if(d.met){metric=d.met;render(true)}
  else if(d.dl!==undefined){S.log.splice(+d.dl,1);upd()}
  else if(d.act==="saveLog"){const g=id=>{const v=parseFloat(String(document.getElementById(id).value).replace(",","."));return isNaN(v)||v<=0?null:v};
@@ -293,17 +353,11 @@ document.addEventListener("click",e=>{
   if(w==null&&!Object.keys(m).length){alert("Renseigne au moins une valeur.");return}
   S.log=S.log||[];const ex=S.log.find(e=>e.d===dt),e=ex||{d:dt};if(w!=null)e.w=w;e.m=Object.assign(e.m||{},m);if(!ex)S.log.push(e);
   S.log.sort((a,b)=>a.d<b.d?-1:1);const lw=[...S.log].reverse().find(e=>e.w!=null);if(lw)S.p.w=lw.w;upd()}
- else if(d.act==="newProfile"){const n=prompt("Nom du nouveau profil ?");if(n&&n.trim()){const x={id:uid(),name:n.trim().slice(0,30),S:clone(DEF)};R.list.push(x);setCur(x.id);save();location.hash="#profil";render(false)}}
- else if(d.act==="delProfile"){if(R.list.length>1&&confirm("Supprimer le profil « "+cur().name+" » et ses données ?")){R.list=R.list.filter(z=>z.id!==R.cur);setCur(R.list[0].id);save();render(false)}}
- else if(d.act==="export"){const bl=new Blob([JSON.stringify({app:"plan-alimentaire",v:3,profiles:R.list.map(x=>({name:x.name,S:x.S}))},null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="plan-alimentaire-sauvegarde.json";document.body.appendChild(a);a.click();a.remove()}
- else if(d.act==="import"){document.getElementById("imp").click()}
  else if(d.act==="auto"){addMeal=null;autoGo()}
  else if(d.act==="more"){ciN+=40;const c=document.getElementById("cr");if(c)c.innerHTML=ciRes(ciq)}
  else if(d.cx!==undefined){ciOpen=ciOpen===+d.cx?null:+d.cx;const c=document.getElementById("cr");if(c)c.innerHTML=ciRes(ciq)}
  else if(d.cg!==undefined){ciG=+d.cg;ciN=40;ciOpen=null;render(true)}
  else if(d.act==="addMeal"){S.meals.push({n:"Nouveau repas",i:[]});upd()}
- else if(d.act==="addFood"){S.foods.push({n:"Nouvel aliment "+(S.foods.length+1),u:"g",q:100,P:0,C:0,L:0,cat:"Autres",auto:true});openFood=S.foods.length-1;upd()}
- else if(d.act==="reset"){if(confirm("Remettre la liste d'aliments de départ ?")){const p=S.p;S=JSON.parse(JSON.stringify(DEF));S.p=p;cur().S=S;auto();render(true)}}
  else if(d.dm!==undefined){addMeal=null;S.meals.splice(d.dm,1);upd()}
  else if(d.di){const[a,i]=d.di.split(",");S.meals[a].i.splice(i,1);upd()}
  else if(d.ai!==undefined){addMeal=+d.ai;mq="";render(true);const q=document.getElementById("mq");if(q)q.focus()}
@@ -312,7 +366,7 @@ document.addEventListener("click",e=>{
  else if(d.mc!==undefined){const x=ci()[+d.mc];if(!find(x.n))S.foods.push({n:x.n,u:"g",q:100,P:x.P,C:x.C,L:x.L,cat:guess(x),auto:true});S.meals[addMeal].i.push([x.n,100]);addMeal=null;upd()}
  else if(d.df!==undefined){openFood=null;const n=S.foods[d.df].n;S.foods.splice(d.df,1);S.meals.forEach(m=>m.i=m.i.filter(it=>it[0]!==n));upd()}
 });
-render(false);
+render(false);boot();
 </script>
 </body>
 </html>
